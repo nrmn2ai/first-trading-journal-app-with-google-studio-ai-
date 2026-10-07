@@ -45,7 +45,13 @@ export default function App() {
   const [isTradeModalOpen, setIsTradeModalOpen] = useState(false);
   const [isAlarmModalOpen, setIsAlarmModalOpen] = useState(false);
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+  const [installModalTab, setInstallModalTab] = useState<'download_ipa' | 'github_sync' | 'pwa_safari' | 'sideload_guide'>('download_ipa');
   const [isCsvModalOpen, setIsCsvModalOpen] = useState(false);
+
+  const handleOpenInstallModal = (tab: 'download_ipa' | 'github_sync' | 'pwa_safari' | 'sideload_guide' = 'download_ipa') => {
+    setInstallModalTab(tab);
+    setIsInstallModalOpen(true);
+  };
 
   // Initialize data on mount
   useEffect(() => {
@@ -241,7 +247,7 @@ export default function App() {
   };
 
   return (
-    <IPhoneFrame>
+    <IPhoneFrame onOpenInstallModal={handleOpenInstallModal}>
       {/* Top Dynamic Island */}
       <DynamicIsland
         stats={stats}
@@ -258,7 +264,7 @@ export default function App() {
         setup={setup}
         alarmTime={alarmTime}
         onOpenAlarmModal={() => setIsAlarmModalOpen(true)}
-        onOpenInstallModal={() => setIsInstallModalOpen(true)}
+        onOpenInstallModal={() => handleOpenInstallModal('download_ipa')}
         onOpenCsvModal={() => setIsCsvModalOpen(true)}
         onExportData={handleExportJson}
       />
@@ -294,6 +300,7 @@ export default function App() {
             setup={setup}
             onOpenTradeModal={() => setIsTradeModalOpen(true)}
             onCheckDailyGoal={handleCheckDailyGoal}
+            onOpenInstallModal={handleOpenInstallModal}
           />
         )}
 
@@ -303,7 +310,7 @@ export default function App() {
           <StrategyTab
             setup={setup}
             onChangeSetup={handleChangeSetup}
-            onOpenInstallModal={() => setIsInstallModalOpen(true)}
+            onOpenInstallModal={() => handleOpenInstallModal('download_ipa')}
           />
         )}
 
@@ -353,6 +360,7 @@ export default function App() {
       <IOSInstallModal
         isOpen={isInstallModalOpen}
         onClose={() => setIsInstallModalOpen(false)}
+        defaultTab={installModalTab}
       />
 
       <CsvImportModal

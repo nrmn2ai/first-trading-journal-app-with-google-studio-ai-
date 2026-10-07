@@ -1,0 +1,12 @@
+{
+  "appId": "com.nrmn2ai.tradingos",
+  "appName": "NRMN2AI Trading OS",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "ios": {
+    "contentInset": "always",
+    "scheme": "NRMN2AI",
+    "preferredContentMode": "mobile",
+    "backgroundColor": "#07090e"
+  }
+}

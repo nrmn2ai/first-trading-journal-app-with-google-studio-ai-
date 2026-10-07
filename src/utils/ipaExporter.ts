@@ -126,53 +126,106 @@ export async function generateIOSProjectZip(): Promise<Blob> {
   };
   zip.file('package.json', JSON.stringify(packageJson, null, 2));
 
-  const ghWorkflow = `name: Build iOS IPA
+  const ghWorkflow = `name: Build & Release iOS IPA
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
+    tags:
+      - 'v*'
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release Tag (e.g. v1.0.0)'
+        required: false
+        default: 'v1.0.0'
+
+permissions:
+  contents: write
 
 jobs:
-  build-ipa:
+  build-and-release:
+    name: Build iOS IPA & Publish to GitHub Releases
     runs-on: macos-14
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           npm ci || npm install
           npm install -D @capacitor/cli @capacitor/core @capacitor/ios
 
-      - name: Build Web App
+      - name: Build Web Application
         run: npm run build
 
-      - name: Add and Sync iOS
+      - name: Initialize Capacitor iOS Project
         run: |
           npx cap add ios || true
           npx cap sync ios
 
-      - name: Build Unsigned IPA Archive
+      - name: Build Archive & Package IPA
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath build/App.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-          mkdir -p build/Payload
-          cp -r build/App.xcarchive/Products/Applications/App.app build/Payload/
-          cd build && zip -r NRMN2AI-TradingOS.ipa Payload
+          xcodebuild -workspace App.xcworkspace \\
+            -scheme App \\
+            -configuration Release \\
+            -destination 'generic/platform=iOS' \\
+            -archivePath build/App.xcarchive \\
+            archive \\
+            CODE_SIGNING_ALLOWED=NO \\
+            CODE_SIGN_IDENTITY="" \\
+            CODE_SIGNING_REQUIRED=NO
 
-      - name: Upload IPA Artifact
+          mkdir -p build/Payload
+          cp -R build/App.xcarchive/Products/Applications/App.app build/Payload/
+          cd build
+          zip -r NRMN2AI-TradingOS.ipa Payload
+          cp NRMN2AI-TradingOS.ipa ../../../NRMN2AI-TradingOS.ipa
+          cd ../../..
+
+      - name: Determine Release Tag
+        id: vars
+        run: |
+          if [ "\${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "\${{ github.event.inputs.release_tag }}" ]; then
+            TAG="\${{ github.event.inputs.release_tag }}"
+          elif [[ "\${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="\${GITHUB_REF#refs/tags/}"
+          else
+            TAG="v1.0.$(date +'%Y%m%d%H%M')"
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Upload IPA as GitHub Actions Artifact
         uses: actions/upload-artifact@v4
         with:
           name: NRMN2AI-TradingOS-IPA
-          path: ios/App/build/NRMN2AI-TradingOS.ipa
+          path: NRMN2AI-TradingOS.ipa
+
+      - name: Create GitHub Release & Upload IPA
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+        with:
+          tag_name: \${{ steps.vars.outputs.tag }}
+          name: Release \${{ steps.vars.outputs.tag }} - NRMN2AI Trading OS IPA
+          draft: false
+          prerelease: false
+          files: |
+            NRMN2AI-TradingOS.ipa
+          body: |
+            ## 🍏 NRMN2AI Trading OS - iOS Release (\${{ steps.vars.outputs.tag }})
+            
+            دانلود فایل **NRMN2AI-TradingOS.ipa** از بخش Assets زیر و سایدلود روی آیفون با Sideloadly یا AltStore.
 `;
-  zip.folder('.github')?.folder('workflows')?.file('build-ipa.yml', ghWorkflow);
+  zip.folder('.github')?.folder('workflows')?.file('deploy-ipa-release.yml', ghWorkflow);
 
   const guideMd = `# راهنمای نصب و استخراج فایل IPA برای آیفون (iOS)
 

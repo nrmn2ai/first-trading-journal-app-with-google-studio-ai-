@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Smartphone, Monitor, Wifi, Battery, Signal } from 'lucide-react';
+import { Smartphone, Monitor, Wifi, Battery, Signal, Apple, Download, Github } from 'lucide-react';
 import { sound } from '../utils/audio';
 import { CandlestickMotionBackground } from './CandlestickMotionBackground';
 
 interface IPhoneFrameProps {
   children: React.ReactNode;
+  onOpenInstallModal?: (tab?: 'download_ipa' | 'github_sync') => void;
 }
 
-export const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children }) => {
+export const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children, onOpenInstallModal }) => {
   const [isPhoneFrameMode, setIsPhoneFrameMode] = useState<boolean>(true);
   const [currentTime, setCurrentTime] = useState<string>('09:41');
 
@@ -68,6 +69,24 @@ export const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children }) => {
           <Monitor className="w-3.5 h-3.5" />
           نمای تمام صفحه
         </button>
+
+        {onOpenInstallModal && (
+          <>
+            <div className="w-[1px] h-4 bg-white/20 mx-0.5" />
+            <button
+              onClick={() => {
+                sound.playTap();
+                onOpenInstallModal('download_ipa');
+              }}
+              className="flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600 hover:brightness-110 text-white shadow-lg shadow-cyan-500/30 active:scale-95 transition-all"
+              title="دانلود فایل IPA و راهنمای استقرار در GitHub Releases"
+            >
+              <Apple className="w-3.5 h-3.5 text-white" />
+              <span>دانلود فایل IPA و گیت‌هاب</span>
+              <Download className="w-3 h-3 text-cyan-200" />
+            </button>
+          </>
+        )}
       </div>
 
       {isPhoneFrameMode ? (

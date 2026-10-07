@@ -99,11 +99,11 @@ export const Header: React.FC<HeaderProps> = ({
               sound.playTap();
               onOpenInstallModal();
             }}
-            className="h-8 px-2 sm:px-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 hover:from-cyan-500/30 hover:to-purple-500/30 border border-cyan-500/40 flex items-center gap-1.5 text-cyan-300 hover:text-white transition-all shadow-sm shadow-cyan-500/10 ios-btn shrink-0"
-            title="دانلود فایل IPA و نصب روی آیفون"
+            className="h-8 px-2.5 sm:px-3 rounded-xl bg-cyan-400 hover:bg-cyan-300 active:scale-95 text-black flex items-center gap-1.5 text-xs font-black transition-all shadow-md shadow-cyan-400/25 shrink-0"
+            title="دانلود فایل IPA و انتشار در GitHub"
           >
-            <Apple className="w-3.5 h-3.5 text-white" />
-            <span className="text-[10px] font-bold">دانلود IPA</span>
+            <Apple className="w-3.5 h-3.5 fill-black" />
+            <span className="text-[11px]">دانلود IPA</span>
           </button>
         </div>
       </div>

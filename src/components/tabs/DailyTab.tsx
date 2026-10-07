@@ -14,6 +14,9 @@ import {
   ChevronRight,
   Flame,
   Volume2,
+  Apple,
+  Download,
+  Github,
 } from 'lucide-react';
 import { DayJournal, TradeItem, ScreenshotItem, SetupConfig } from '../../types/trading';
 import { CalculatedStats } from '../../utils/storage';
@@ -28,6 +31,7 @@ interface DailyTabProps {
   setup: SetupConfig;
   onOpenTradeModal: () => void;
   onCheckDailyGoal: () => void;
+  onOpenInstallModal?: (tab?: 'download_ipa' | 'github_sync') => void;
 }
 
 export const DailyTab: React.FC<DailyTabProps> = ({
@@ -39,6 +43,7 @@ export const DailyTab: React.FC<DailyTabProps> = ({
   setup,
   onOpenTradeModal,
   onCheckDailyGoal,
+  onOpenInstallModal,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -131,6 +136,54 @@ export const DailyTab: React.FC<DailyTabProps> = ({
 
   return (
     <div className="space-y-4 pb-24 pt-2 px-3.5 select-none" dir="rtl">
+      {/* 🍏 Prominent Download IPA & GitHub Release Hub Card */}
+      <div className="p-3.5 rounded-2xl bg-gradient-to-r from-cyan-950/70 via-slate-900/90 to-purple-950/70 border border-cyan-500/40 shadow-xl shadow-cyan-950/40 relative overflow-hidden animate-fade-in">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-500 p-0.5 shrink-0 shadow-md shadow-cyan-500/25">
+              <div className="w-full h-full bg-[#0a0d14] rounded-[10px] flex items-center justify-center">
+                <Apple className="w-5 h-5 text-white" />
+              </div>
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-extrabold text-xs text-white">دانلود فایل IPA و همگام‌سازی گیت‌هاب</h3>
+                <span className="text-[9px] font-mono font-black px-1.5 py-0.2 bg-cyan-400 text-black rounded-md">
+                  iOS / Releases
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                دانلود مستقیم فایل .ipa یا انتشار خودکار با GitHub Actions Workflow در صفحه Releases
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-3 pt-2.5 border-t border-white/10 flex items-center justify-end gap-2">
+          <button
+            onClick={() => {
+              sound.playTap();
+              onOpenInstallModal?.('github_sync');
+            }}
+            className="px-3 py-1.5 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 font-bold text-[11px] flex items-center gap-1.5 active:scale-95 transition-all"
+          >
+            <Github className="w-3.5 h-3.5" />
+            <span>گیت‌هاب و Workflow</span>
+          </button>
+
+          <button
+            onClick={() => {
+              sound.playTap();
+              onOpenInstallModal?.('download_ipa');
+            }}
+            className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-400 text-black font-extrabold text-[11px] flex items-center gap-1.5 shadow-md shadow-cyan-500/30 active:scale-95 transition-all"
+          >
+            <Download className="w-3.5 h-3.5" />
+            <span>دانلود مستقیم IPA</span>
+          </button>
+        </div>
+      </div>
+
       {/* 60-Day Horizontal Carousel */}
       <div className="ios-card-sm p-2.5">
         <div className="flex items-center justify-between mb-2 px-1">
