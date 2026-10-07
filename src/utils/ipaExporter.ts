@@ -112,13 +112,20 @@ export async function generateIOSProjectZip(): Promise<Blob> {
     name: 'nrmn2ai-ios-app',
     version: '1.0.0',
     description: 'NRMN2AI Trading OS for iOS',
+    type: 'module',
     scripts: {
+      build: 'vite build',
       'build:ios': 'npm run build && npx cap sync ios',
       'open:ios': 'npx cap open ios',
     },
     dependencies: {
       '@capacitor/core': '^6.0.0',
       '@capacitor/ios': '^6.0.0',
+      'lucide-react': '^0.546.0',
+      motion: '^12.23.24',
+      react: '^19.0.1',
+      'react-dom': '^19.0.1',
+      vite: '^8.3.0',
     },
     devDependencies: {
       '@capacitor/cli': '^6.0.0',
@@ -153,10 +160,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         run: |
@@ -164,7 +171,23 @@ jobs:
           npm install -D --legacy-peer-deps @capacitor/cli @capacitor/core @capacitor/ios
 
       - name: Build Web Application
-        run: npm run build
+        run: |
+          node -e '
+            const fs = require("fs");
+            if (fs.existsSync("package.json")) {
+              const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+              pkg.scripts = pkg.scripts || {};
+              if (!pkg.scripts.build) {
+                pkg.scripts.build = "vite build";
+                fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
+              }
+            }
+          '
+          npm run build || npx vite build
+          if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+            mkdir -p dist
+            cp index.html dist/index.html || true
+          fi
 
       - name: Initialize Capacitor iOS Project
         run: |

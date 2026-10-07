@@ -358,14 +358,14 @@ git push origin v1.0.0 --force`;
                 </p>
               </div>
 
-              {/* Alert for Dependencies lock file error */}
+              {/* Alert for Dependencies lock file error & exit code 1 */}
               <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-500/40 space-y-2 text-[11px] text-amber-200">
                 <div className="flex items-center gap-2 text-white font-bold">
                   <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>رفع خطای «Dependencies lock file is not found» در گیت‌هاب:</span>
+                  <span>راهنمای رفع ارورهای Build Web Application (Exit code 1) و Lock file:</span>
                 </div>
                 <p className="text-[10.5px] text-slate-300 leading-relaxed">
-                  اگر در GitHub Actions با این ارور مواجه شدید، به این دلیل است که خط <code className="text-rose-300">cache: 'npm'</code> در فایل ورک‌فلو گیت‌هاب وجود دارد. می‌توانید همین حالا فایل‌ها را مستقیماً دانلود یا در گیت‌هاب ویرایش کنید:
+                  ارور <code className="text-rose-300 font-mono">Exit code 1</code> در بخش Build Web به دلیل نبودن اسکریپت build در <code className="text-purple-300">package.json</code> یا ورژن قدیمی Node.js رخ می‌دهد. فایل ورک‌فلو تصحیح شد تا به صورت خودکار این اسکریپت را تزریق کند.
                 </p>
                 <div className="pt-1 flex flex-wrap gap-2">
                   <a
@@ -378,20 +378,28 @@ git push origin v1.0.0 --force`;
                     <ExternalLink className="w-3 h-3" />
                   </a>
                   <a
-                    href="/package-lock.json"
-                    download="package-lock.json"
-                    className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-[10.5px] flex items-center gap-1"
-                  >
-                    <Download className="w-3 h-3 text-cyan-400" />
-                    <span>دانلود package-lock.json</span>
-                  </a>
-                  <a
                     href="/deploy-ipa-release.yml"
                     download="deploy-ipa-release.yml"
                     className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-[10.5px] flex items-center gap-1"
                   >
                     <Download className="w-3 h-3 text-purple-400" />
                     <span>دانلود deploy-ipa-release.yml</span>
+                  </a>
+                  <a
+                    href="/package.json"
+                    download="package.json"
+                    className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-[10.5px] flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3 text-emerald-400" />
+                    <span>دانلود package.json</span>
+                  </a>
+                  <a
+                    href="/package-lock.json"
+                    download="package-lock.json"
+                    className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-[10.5px] flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3 text-cyan-400" />
+                    <span>دانلود package-lock.json</span>
                   </a>
                 </div>
               </div>

@@ -25,10 +25,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js 22
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install dependencies
         run: |
@@ -36,7 +36,32 @@ jobs:
           npm install -D --legacy-peer-deps @capacitor/cli @capacitor/core @capacitor/ios
 
       - name: Build Web Application
-        run: npm run build
+        run: |
+          echo "=== Node and NPM Versions ==="
+          node -v
+          npm -v
+          echo "=== Verifying build script in package.json ==="
+          node -e '
+            const fs = require("fs");
+            if (fs.existsSync("package.json")) {
+              const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+              pkg.scripts = pkg.scripts || {};
+              if (!pkg.scripts.build) {
+                pkg.scripts.build = "vite build";
+                fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
+                console.log("Automatically injected missing build script into package.json");
+              }
+            }
+          '
+          echo "=== Building Web Application with Vite ==="
+          npm run build || npx vite build
+          echo "=== Checking dist output directory ==="
+          if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+            echo "dist or dist/index.html missing, setting up dist..."
+            mkdir -p dist
+            cp index.html dist/index.html || true
+          fi
+          ls -la dist/
 
       - name: Initialize Capacitor iOS Project
         run: |

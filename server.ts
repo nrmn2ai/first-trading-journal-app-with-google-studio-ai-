@@ -55,6 +55,18 @@ app.get('/package-lock.json', (_req, res) => {
   res.download('package-lock.json', 'package-lock.json');
 });
 
+app.get('/package.json', (_req, res) => {
+  res.download('package.json', 'package.json');
+});
+
+app.get('/vite.config.ts', (_req, res) => {
+  res.download('vite.config.ts', 'vite.config.ts');
+});
+
+app.get('/capacitor.config.json', (_req, res) => {
+  res.download('capacitor.config.json', 'capacitor.config.json');
+});
+
 app.get('/deploy-ipa-release.yml', (_req, res) => {
   res.download('.github/workflows/deploy-ipa-release.yml', 'deploy-ipa-release.yml');
 });

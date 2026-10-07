@@ -119,15 +119,20 @@ git push origin v1.0.0 --force`;
             </div>
           </div>
 
-          {/* Alert: Fix for GitHub Actions lock file error */}
-          <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-[11px] text-amber-200 leading-relaxed space-y-2.5 shadow-sm">
-            <div className="flex items-start gap-2.5">
+          {/* Alert: Fix for GitHub Actions build / lock errors */}
+          <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-[11px] text-amber-200 leading-relaxed space-y-3 shadow-sm">
+            <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-              <div>
-                <span className="font-extrabold text-white block mb-0.5 text-xs">
-                  علت و رفع خطای Dependencies lock file is not found در گیت‌هاب:
+              <div className="space-y-1">
+                <span className="font-extrabold text-white block text-xs">
+                  راهنمای رفع ارورهای GitHub Actions (Exit Code 1 و Lock File):
                 </span>
-                این ارور به این دلیل رخ می‌دهد که در فایل <code className="px-1 py-0.2 rounded bg-black/50 text-cyan-300 font-mono">deploy-ipa-release.yml</code> در مخزن گیت‌هاب شما گزینه <code className="px-1 py-0.2 rounded bg-red-950/80 text-rose-300 font-mono">cache: 'npm'</code> فعال است اما هنوز فایل lock در گیت‌هاب وجود ندارد.
+                <p className="text-slate-300 text-[11px]">
+                  <strong>علت ارور Build Web Application (Exit code 1):</strong> نبودن دستور <code className="text-cyan-300">"build": "vite build"</code> در فایل <code className="text-purple-300">package.json</code> یا عدم تطابق نسخه Node.js در سرور اکشنز.
+                </p>
+                <p className="text-slate-300 text-[11px]">
+                  <strong>راهکار آنی:</strong> ورک‌فلو <code className="text-cyan-300">deploy-ipa-release.yml</code> بازنویسی شد تا اسکریپت بیلد را به صورت خودکار ترمیم کند. کافیست محتوای ورک‌فلو را جایگزین کنید.
+                </p>
               </div>
             </div>
 
@@ -143,21 +148,30 @@ git push origin v1.0.0 --force`;
               </a>
 
               <a
+                href="/deploy-ipa-release.yml"
+                download="deploy-ipa-release.yml"
+                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 font-bold text-[11px] flex items-center gap-1.5 transition-all"
+              >
+                <Download className="w-3 h-3 text-purple-400" />
+                <span>دانلود ورک‌فلو تصحیح‌شده (.yml)</span>
+              </a>
+
+              <a
+                href="/package.json"
+                download="package.json"
+                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 font-bold text-[11px] flex items-center gap-1.5 transition-all"
+              >
+                <Download className="w-3 h-3 text-emerald-400" />
+                <span>دانلود package.json</span>
+              </a>
+
+              <a
                 href="/package-lock.json"
                 download="package-lock.json"
                 className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 font-bold text-[11px] flex items-center gap-1.5 transition-all"
               >
                 <Download className="w-3 h-3 text-cyan-400" />
                 <span>دانلود package-lock.json</span>
-              </a>
-
-              <a
-                href="/deploy-ipa-release.yml"
-                download="deploy-ipa-release.yml"
-                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 font-bold text-[11px] flex items-center gap-1.5 transition-all"
-              >
-                <Download className="w-3 h-3 text-purple-400" />
-                <span>دانلود فایل ورک‌فلو (.yml)</span>
               </a>
             </div>
           </div>
