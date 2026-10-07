@@ -157,12 +157,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install dependencies
         run: |
-          npm ci || npm install
-          npm install -D @capacitor/cli @capacitor/core @capacitor/ios
+          npm install --legacy-peer-deps
+          npm install -D --legacy-peer-deps @capacitor/cli @capacitor/core @capacitor/ios
 
       - name: Build Web Application
         run: npm run build
@@ -212,7 +211,7 @@ jobs:
 
       - name: Create GitHub Release & Upload IPA
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
           tag_name: \${{ steps.vars.outputs.tag }}
           name: Release \${{ steps.vars.outputs.tag }} - NRMN2AI Trading OS IPA
@@ -271,3 +270,14 @@ export function triggerDownload(blob: Blob, filename: string) {
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1500);
 }
+
+export async function generateAndDownloadIpa(filename = 'NRMN2AI-TradingOS.ipa') {
+  const blob = await generateIpaFile();
+  triggerDownload(blob, filename);
+}
+
+export async function generateProjectZip(filename = 'NRMN2AI-Source-and-Workflow.zip') {
+  const blob = await generateIOSProjectZip();
+  triggerDownload(blob, filename);
+}
+

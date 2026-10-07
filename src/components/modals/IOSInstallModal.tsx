@@ -21,6 +21,7 @@ import {
   GitPullRequest,
   ArrowRight,
   UploadCloud,
+  AlertTriangle,
 } from 'lucide-react';
 import { sound } from '../../utils/audio';
 import { generateIpaFile, generateIOSProjectZip, triggerDownload } from '../../utils/ipaExporter';
@@ -47,22 +48,24 @@ export const IOSInstallModal: React.FC<IOSInstallModalProps> = ({
   const [downloadSuccessMessage, setDownloadSuccessMessage] = useState<string | null>(null);
 
   // GitHub user repo state
-  const [githubRepoName, setGithubRepoName] = useState('nrmn2ai/nrmn2ai-trading-os');
+  const [githubRepoName, setGithubRepoName] = useState('nrmn2ai/first-trading-journal-app-with-google-studio-ai-');
 
   if (!isOpen) return null;
 
-  const sanitizedRepo = githubRepoName.trim() || 'nrmn2ai/nrmn2ai-trading-os';
+  const sanitizedRepo = githubRepoName.trim() || 'nrmn2ai/first-trading-journal-app-with-google-studio-ai-';
   const repoUrl = `https://github.com/${sanitizedRepo}`;
   const releasesUrl = `https://github.com/${sanitizedRepo}/releases`;
 
-  const gitPushCommands = `# ۱. راه‌اندازی و اتصال به مخزن گیت‌هاب شما
-git remote add origin ${repoUrl}.git
+  const gitPushCommands = `# ۱. اتصال و پوش تغییرات به مخزن گیت‌هاب شما
+git remote add origin ${repoUrl}.git 2>/dev/null || git remote set-url origin ${repoUrl}.git
 git branch -M main
-git push -u origin main`;
+git add .
+git commit -m "fix: resolve dependencies lock file and trigger IPA release"
+git push -u origin main --force`;
 
   const gitTagCommands = `# ۲. ساخت برچسب نسخه جدید برای فعال‌سازی اتوماتیک GitHub Actions
 git tag -a v1.0.0 -m "Release v1.0.0 with IPA"
-git push origin v1.0.0`;
+git push origin v1.0.0 --force`;
 
   const handleDownloadIpa = async () => {
     try {
@@ -353,6 +356,44 @@ git push origin v1.0.0`;
                 <p className="text-[11px] text-slate-300 leading-relaxed">
                   فایل جریان کاری <code>.github/workflows/deploy-ipa-release.yml</code> در پروژه تنظیم شده است. با پوش به مخزن گیت‌هاب، سرورهای ابری مک‌او‌اس اپل (macOS-14) به صورت خودکار پروژه را بیلد کرده و فایل <strong>NRMN2AI-TradingOS.ipa</strong> را در صفحه Release مخزن شما آپلود می‌کنند!
                 </p>
+              </div>
+
+              {/* Alert for Dependencies lock file error */}
+              <div className="p-3 rounded-xl bg-amber-950/40 border border-amber-500/40 space-y-2 text-[11px] text-amber-200">
+                <div className="flex items-center gap-2 text-white font-bold">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>رفع خطای «Dependencies lock file is not found» در گیت‌هاب:</span>
+                </div>
+                <p className="text-[10.5px] text-slate-300 leading-relaxed">
+                  اگر در GitHub Actions با این ارور مواجه شدید، به این دلیل است که خط <code className="text-rose-300">cache: 'npm'</code> در فایل ورک‌فلو گیت‌هاب وجود دارد. می‌توانید همین حالا فایل‌ها را مستقیماً دانلود یا در گیت‌هاب ویرایش کنید:
+                </p>
+                <div className="pt-1 flex flex-wrap gap-2">
+                  <a
+                    href={`https://github.com/${sanitizedRepo}/edit/main/.github/workflows/deploy-ipa-release.yml`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-[10.5px] flex items-center gap-1"
+                  >
+                    <span>ویرایش آنلاین در گیت‌هاب</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                  <a
+                    href="/package-lock.json"
+                    download="package-lock.json"
+                    className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-[10.5px] flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3 text-cyan-400" />
+                    <span>دانلود package-lock.json</span>
+                  </a>
+                  <a
+                    href="/deploy-ipa-release.yml"
+                    download="deploy-ipa-release.yml"
+                    className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/15 text-white font-bold text-[10.5px] flex items-center gap-1"
+                  >
+                    <Download className="w-3 h-3 text-purple-400" />
+                    <span>دانلود deploy-ipa-release.yml</span>
+                  </a>
+                </div>
               </div>
 
               {/* Repo Name Input */}

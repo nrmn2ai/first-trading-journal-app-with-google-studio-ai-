@@ -13,6 +13,7 @@ import { ChartTab } from './components/tabs/ChartTab';
 import { StrategyTab } from './components/tabs/StrategyTab';
 import { AnalyticsTab } from './components/tabs/AnalyticsTab';
 import { AiCoachTab } from './components/tabs/AiCoachTab';
+import { DownloadTab } from './components/tabs/DownloadTab';
 import { AddTradeModal } from './components/modals/AddTradeModal';
 import { AlarmModal } from './components/modals/AlarmModal';
 import { IOSInstallModal } from './components/modals/IOSInstallModal';
@@ -289,7 +290,7 @@ export default function App() {
       )}
 
       {/* Main Tab Content */}
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pb-28">
         {activeTab === 'daily' && (
           <DailyTab
             currentDay={currentDay}
@@ -333,6 +334,8 @@ export default function App() {
             setup={setup}
           />
         )}
+
+        {activeTab === 'download' && <DownloadTab />}
       </main>
 
       {/* Fixed Bottom iOS Tab Bar */}

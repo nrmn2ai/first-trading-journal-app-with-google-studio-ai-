@@ -50,12 +50,39 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
+// Direct file download endpoints for GitHub sync
+app.get('/package-lock.json', (_req, res) => {
+  res.download('package-lock.json', 'package-lock.json');
+});
+
+app.get('/deploy-ipa-release.yml', (_req, res) => {
+  res.download('.github/workflows/deploy-ipa-release.yml', 'deploy-ipa-release.yml');
+});
+
 async function start() {
   const httpServer = http.createServer(app);
 
   if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('dist'));
+    app.use(
+      express.static('dist', {
+        setHeaders: (res, filePath) => {
+          if (
+            filePath.endsWith('index.html') ||
+            filePath.endsWith('sw.js') ||
+            filePath.endsWith('registerSW.js') ||
+            filePath.endsWith('manifest.webmanifest')
+          ) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+          }
+        },
+      })
+    );
     app.get('*', (_req, res) => {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       res.sendFile('dist/index.html', { root: '.' });
     });
   } else {

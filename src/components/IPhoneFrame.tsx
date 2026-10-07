@@ -45,45 +45,47 @@ export const IPhoneFrame: React.FC<IPhoneFrameProps> = ({ children, onOpenInstal
         <div className="absolute -bottom-[10%] left-[20%] w-[500px] h-[500px] rounded-full bg-blue-500/5 blur-[120px]" />
       </div>
 
-      {/* Mode Switcher Floating Pill (Visible on Desktop / Tablets) */}
-      <div className="sticky top-2 z-50 mb-2 mt-2 px-3 py-1.5 rounded-full ios-glass flex items-center gap-2 border border-white/10 shadow-xl hidden md:flex">
+      {/* Mode Switcher Floating Pill (Visible on All Devices - Desktop & Mobile) */}
+      <div className="sticky top-2 z-50 mb-2 mt-2 px-2.5 sm:px-3 py-1.5 rounded-full ios-glass flex items-center gap-1.5 sm:gap-2 border border-white/10 shadow-xl max-w-[95vw] overflow-x-auto">
         <button
           onClick={() => toggleMode(true)}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
+          className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all whitespace-nowrap ${
             isPhoneFrameMode
               ? 'bg-cyan-500 text-black font-bold shadow-md shadow-cyan-500/20'
               : 'text-slate-400 hover:text-white'
           }`}
         >
-          <Smartphone className="w-3.5 h-3.5" />
-          قاب آیفون ۱۶ پرو
+          <Smartphone className="w-3.5 h-3.5 shrink-0" />
+          <span className="hidden sm:inline">قاب آیفون ۱۶ پرو</span>
+          <span className="sm:hidden">قاب آیفون</span>
         </button>
         <button
           onClick={() => toggleMode(false)}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-all ${
+          className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-medium transition-all whitespace-nowrap ${
             !isPhoneFrameMode
               ? 'bg-cyan-500 text-black font-bold shadow-md shadow-cyan-500/20'
               : 'text-slate-400 hover:text-white'
           }`}
         >
-          <Monitor className="w-3.5 h-3.5" />
-          نمای تمام صفحه
+          <Monitor className="w-3.5 h-3.5 shrink-0" />
+          <span className="hidden sm:inline">نمای تمام صفحه</span>
+          <span className="sm:hidden">تمام صفحه</span>
         </button>
 
         {onOpenInstallModal && (
           <>
-            <div className="w-[1px] h-4 bg-white/20 mx-0.5" />
+            <div className="w-[1px] h-4 bg-white/20 mx-0.5 shrink-0" />
             <button
               onClick={() => {
                 sound.playTap();
                 onOpenInstallModal('download_ipa');
               }}
-              className="flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-extrabold bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600 hover:brightness-110 text-white shadow-lg shadow-cyan-500/30 active:scale-95 transition-all"
+              className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-extrabold bg-gradient-to-r from-cyan-500 via-indigo-500 to-purple-600 hover:brightness-110 text-white shadow-lg shadow-cyan-500/30 active:scale-95 transition-all whitespace-nowrap"
               title="دانلود فایل IPA و راهنمای استقرار در GitHub Releases"
             >
-              <Apple className="w-3.5 h-3.5 text-white" />
-              <span>دانلود فایل IPA و گیت‌هاب</span>
-              <Download className="w-3 h-3 text-cyan-200" />
+              <Apple className="w-3.5 h-3.5 text-white shrink-0" />
+              <span>دانلود IPA و GitHub</span>
+              <Download className="w-3 h-3 text-cyan-200 shrink-0" />
             </button>
           </>
         )}

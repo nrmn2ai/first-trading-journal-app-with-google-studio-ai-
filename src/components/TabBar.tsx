@@ -1,8 +1,8 @@
 import React from 'react';
-import { BookOpen, LineChart, Sliders, Award, Sparkles } from 'lucide-react';
+import { BookOpen, LineChart, Sliders, Award, Sparkles, Apple } from 'lucide-react';
 import { sound } from '../utils/audio';
 
-export type TabKey = 'daily' | 'chart' | 'strategy' | 'analytics' | 'coach';
+export type TabKey = 'daily' | 'chart' | 'strategy' | 'analytics' | 'coach' | 'download';
 
 interface TabBarProps {
   activeTab: TabKey;
@@ -20,38 +20,43 @@ export const TabBar: React.FC<TabBarProps> = ({
     onChangeTab(tab);
   };
 
-  const tabs: { key: TabKey; label: string; icon: React.ReactNode; badge?: number }[] = [
+  const tabs: { key: TabKey; label: string; icon: React.ReactNode; badge?: number | string }[] = [
     {
       key: 'daily',
       label: 'امروز',
-      icon: <BookOpen className="w-5 h-5" />,
+      icon: <BookOpen className="w-4.5 h-4.5" />,
       badge: todayTradeCount > 0 ? todayTradeCount : undefined,
     },
     {
       key: 'chart',
       label: 'چارت',
-      icon: <LineChart className="w-5 h-5" />,
+      icon: <LineChart className="w-4.5 h-4.5" />,
     },
     {
       key: 'strategy',
       label: 'ستاپ',
-      icon: <Sliders className="w-5 h-5" />,
+      icon: <Sliders className="w-4.5 h-4.5" />,
     },
     {
       key: 'analytics',
       label: 'ارزیابی',
-      icon: <Award className="w-5 h-5" />,
+      icon: <Award className="w-4.5 h-4.5" />,
     },
     {
       key: 'coach',
       label: 'مربی AI',
-      icon: <Sparkles className="w-5 h-5" />,
+      icon: <Sparkles className="w-4.5 h-4.5" />,
+    },
+    {
+      key: 'download',
+      label: 'دانلود IPA',
+      icon: <Apple className="w-4.5 h-4.5 fill-cyan-400 text-cyan-400" />,
     },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 ios-glass-dock pb-[max(env(safe-area-inset-bottom,16px),16px)] pt-2 px-2 border-t border-white/8 transition-all">
-      <div className="max-w-[430px] mx-auto grid grid-cols-5 items-center">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 ios-glass-dock pb-[max(env(safe-area-inset-bottom,16px),16px)] pt-2 px-1 sm:px-2 border-t border-white/8 transition-all">
+      <div className="max-w-[430px] mx-auto grid grid-cols-6 items-center">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.key;
           return (
@@ -77,9 +82,16 @@ export const TabBar: React.FC<TabBarProps> = ({
                     {tab.badge}
                   </span>
                 )}
+
+                {/* Special IPA tab badge */}
+                {tab.key === 'download' && tab.badge === undefined && (
+                  <span className="absolute -top-1 -right-2 bg-gradient-to-r from-cyan-400 to-purple-400 text-black font-black text-[7.5px] px-1 py-0.1 rounded-full ring-1 ring-black">
+                    IPA
+                  </span>
+                )}
               </div>
 
-              <span className={`text-[10px] mt-1 tracking-tight select-none truncate ${isActive ? 'text-cyan-400 font-bold' : 'text-slate-400'}`}>
+              <span className={`text-[9.5px] sm:text-[10px] mt-1 tracking-tight select-none truncate ${isActive ? 'text-cyan-400 font-bold' : 'text-slate-400'}`}>
                 {tab.label}
               </span>
 
