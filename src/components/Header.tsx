@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, Download, Upload, Share, Sparkles, Smartphone, Volume2 } from 'lucide-react';
+import { Bell, Download, Upload, Share, Sparkles, Smartphone, Volume2, Apple } from 'lucide-react';
 import { CalculatedStats } from '../utils/storage';
 import { SetupConfig } from '../types/trading';
 import { sound } from '../utils/audio';
@@ -93,16 +93,17 @@ export const Header: React.FC<HeaderProps> = ({
             <Download className="w-3.5 h-3.5" />
           </button>
 
-          {/* Add to iPhone Home Screen Guide */}
+          {/* Download IPA & iOS Install */}
           <button
             onClick={() => {
               sound.playTap();
               onOpenInstallModal();
             }}
-            className="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 hover:from-cyan-500/30 hover:to-purple-500/30 border border-cyan-500/30 flex items-center justify-center text-cyan-300 ios-btn"
-            title="نصب روی آیفون (PWA)"
+            className="h-8 px-2 sm:px-2.5 rounded-xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-purple-500/20 hover:from-cyan-500/30 hover:to-purple-500/30 border border-cyan-500/40 flex items-center gap-1.5 text-cyan-300 hover:text-white transition-all shadow-sm shadow-cyan-500/10 ios-btn shrink-0"
+            title="دانلود فایل IPA و نصب روی آیفون"
           >
-            <Share className="w-3.5 h-3.5" />
+            <Apple className="w-3.5 h-3.5 text-white" />
+            <span className="text-[10px] font-bold">دانلود IPA</span>
           </button>
         </div>
       </div>

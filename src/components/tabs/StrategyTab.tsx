@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Sliders, Shield, AlertTriangle, CheckSquare, Zap, Power, HelpCircle } from 'lucide-react';
+import { Sliders, Shield, AlertTriangle, CheckSquare, Zap, Power, HelpCircle, Apple, Download, Smartphone } from 'lucide-react';
 import { SetupConfig } from '../../types/trading';
 import { sound } from '../../utils/audio';
 
 interface StrategyTabProps {
   setup: SetupConfig;
   onChangeSetup: (setup: SetupConfig) => void;
+  onOpenInstallModal?: () => void;
 }
 
-export const StrategyTab: React.FC<StrategyTabProps> = ({ setup, onChangeSetup }) => {
+export const StrategyTab: React.FC<StrategyTabProps> = ({ setup, onChangeSetup, onOpenInstallModal }) => {
   const [hardStopTriggered, setHardStopTriggered] = useState(false);
 
   const handlePhaseChange = (phase: '1' | '2') => {
@@ -194,6 +195,40 @@ export const StrategyTab: React.FC<StrategyTabProps> = ({ setup, onChangeSetup }
             </div>
           </div>
         )}
+      </div>
+
+      {/* iOS App & IPA Download Section */}
+      <div className="ios-card p-4 space-y-3 bg-gradient-to-br from-[#121622] to-[#0c0f16] border border-cyan-500/30 shadow-lg shadow-cyan-500/5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-cyan-500/15 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <Apple className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="font-extrabold text-xs text-white">نصب روی آیفون و دریافت فایل IPA</h4>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/15 text-cyan-400 border border-cyan-500/25">
+                  iOS Native
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400">دانلود بسته IPA یا نصب مستقیم بدون نیاز به کامپیوتر</p>
+            </div>
+          </div>
+
+          {onOpenInstallModal && (
+            <button
+              type="button"
+              onClick={() => {
+                sound.playTap();
+                onOpenInstallModal();
+              }}
+              className="px-3 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold text-xs flex items-center gap-1.5 shadow-md shadow-cyan-500/25 active:scale-95 transition-all"
+            >
+              <Download className="w-3.5 h-3.5" />
+              مرکز دانلود
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

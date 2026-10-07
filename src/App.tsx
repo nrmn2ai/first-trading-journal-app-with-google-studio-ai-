@@ -300,7 +300,11 @@ export default function App() {
         {activeTab === 'chart' && <ChartTab />}
 
         {activeTab === 'strategy' && (
-          <StrategyTab setup={setup} onChangeSetup={handleChangeSetup} />
+          <StrategyTab
+            setup={setup}
+            onChangeSetup={handleChangeSetup}
+            onOpenInstallModal={() => setIsInstallModalOpen(true)}
+          />
         )}
 
         {activeTab === 'analytics' && (
