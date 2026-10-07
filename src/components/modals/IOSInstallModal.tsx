@@ -258,6 +258,10 @@ git push origin v1.0.0 --force`;
                   </div>
                 </div>
 
+                <div className="mt-3 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-[10px] text-amber-200 leading-relaxed">
+                  ⚠️ <strong>توجه مهم:</strong> سیستم‌عامل iOS اجازه نصب فایل IPA را صرفاً با لمس کردن در Files نمی‌دهد. برای نصب بدون کامپیوتر از تب <strong>«نصب Safari»</strong> استفاده کنید. برای نصب IPA، باید از کامپیوتر و نرم‌افزار Sideloadly استفاده شود.
+                </div>
+
                 <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-1.5 text-[10px] text-cyan-400 font-mono">
                     <CheckCircle className="w-3 h-3 text-cyan-400" />
@@ -632,8 +636,26 @@ git push origin v1.0.0 --force`;
                 </ol>
               </div>
 
+              <div className="p-3.5 rounded-2xl bg-amber-950/30 border border-amber-500/30 text-[11px] text-amber-200 leading-relaxed space-y-1.5">
+                <span className="font-extrabold text-white block">⚠️ اگر Sideloadly ارور «No executable found» می‌دهد:</span>
+                <p className="text-slate-300">
+                  فایل IPA نیاز به باینری کامپایل‌شده اپل (Mach-O) دارد. این فایل توسط GitHub Actions در مک‌او‌اس بیلد و در بخش <strong>Releases</strong> قرار می‌گیرد.
+                </p>
+                <div className="pt-1">
+                  <a
+                    href={releasesUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-[11px] transition-all"
+                  >
+                    <span>دانلود IPA کامپایل‌شده از GitHub Releases</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                </div>
+              </div>
+
               <div className="p-3 rounded-2xl bg-cyan-950/30 border border-cyan-500/20 text-cyan-300 text-[11px] flex items-center justify-between">
-                <span>دانلود مستقیم فایل IPA برای سایدلود:</span>
+                <span>دانلود مستقیم فایل ساختار IPA:</span>
                 <button
                   onClick={handleDownloadIpa}
                   disabled={isGeneratingIpa}

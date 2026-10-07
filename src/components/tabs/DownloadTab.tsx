@@ -27,6 +27,7 @@ export const DownloadTab: React.FC = () => {
   const [isGeneratingZip, setIsGeneratingZip] = useState(false);
   const [copiedGitCmds, setCopiedGitCmds] = useState(false);
   const [copiedTagCmds, setCopiedTagCmds] = useState(false);
+  const [copiedAppUrl, setCopiedAppUrl] = useState(false);
   const [downloadSuccessMessage, setDownloadSuccessMessage] = useState<string | null>(null);
 
   // Default to user's exact repository
@@ -38,6 +39,14 @@ export const DownloadTab: React.FC = () => {
   const repoUrl = `https://github.com/${sanitizedRepo}`;
   const releasesUrl = `https://github.com/${sanitizedRepo}/releases`;
   const actionsUrl = `https://github.com/${sanitizedRepo}/actions`;
+
+  const handleCopyAppUrl = () => {
+    sound.playTap();
+    const url = typeof window !== 'undefined' ? window.location.href : '';
+    navigator.clipboard.writeText(url);
+    setCopiedAppUrl(true);
+    setTimeout(() => setCopiedAppUrl(false), 2500);
+  };
 
   const gitPushCommands = `# ۱. ارسال تغییرات و رفع مشکل lock file به مخزن گیت‌هاب
 git remote add origin ${repoUrl}.git 2>/dev/null || git remote set-url origin ${repoUrl}.git
@@ -119,19 +128,94 @@ git push origin v1.0.0 --force`;
             </div>
           </div>
 
-          {/* Alert: Fix for GitHub Actions build / lock errors */}
+          {/* Featured Card: 10-Second Instant Install on iPhone without PC (Safari PWA) */}
+          <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-slate-900/80 to-cyan-950/70 border border-emerald-500/40 relative overflow-hidden shadow-xl space-y-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+                  <Smartphone className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-black text-white">نصب آنی و تضمینی روی آیفون در ۱۰ ثانیه (PWA)</h3>
+                    <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      روش رسمی اپل بدون کامپیوتر
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                    اگر می‌خواهید اپلیکیشن <strong>همین لحظه و بدون کابل، کامپیوتر یا فایل IPA</strong> با ظاهر کاملاً بومی، تمام‌صفحه و آفلاین روی آیفون شما نصب شود:
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
+              <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                  <span className="w-4 h-4 rounded-full bg-emerald-500/20 flex items-center justify-center font-mono text-[10px]">۱</span>
+                  <span>باز کردن لینک در Safari</span>
+                </div>
+                <p className="text-[10px] text-slate-400">آدرس برنامه را در مرورگر Safari آیفون باز کنید.</p>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                <div className="flex items-center gap-1.5 text-cyan-400 font-bold">
+                  <span className="w-4 h-4 rounded-full bg-cyan-500/20 flex items-center justify-center font-mono text-[10px]">۲</span>
+                  <span>لمس آیکون Share</span>
+                </div>
+                <p className="text-[10px] text-slate-400">دکمه اشتراک‌گذاری (مربع با فلش بالا) را لمس کنید.</p>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-black/40 border border-white/5 space-y-1">
+                <div className="flex items-center gap-1.5 text-purple-400 font-bold">
+                  <span className="w-4 h-4 rounded-full bg-purple-500/20 flex items-center justify-center font-mono text-[10px]">۳</span>
+                  <span>Add to Home Screen</span>
+                </div>
+                <p className="text-[10px] text-slate-400">گزینه «افزودن به صفحه اصلی» و سپس Add را بزنید.</p>
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-2">
+              <span className="text-[10px] text-emerald-300 font-medium flex items-center gap-1">
+                <CheckCircle className="w-3.5 h-3.5" />
+                <span>بدون باطل شدن لایسنس ۷ روزه، بدون نیاز به اپل آیدی، کاملاً آفلاین</span>
+              </span>
+
+              <button
+                onClick={handleCopyAppUrl}
+                className="px-3.5 py-1.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black font-extrabold text-[11px] flex items-center gap-1.5 shadow-md shadow-emerald-400/20 active:scale-95 transition-all"
+              >
+                {copiedAppUrl ? (
+                  <>
+                    <CheckCircle className="w-3.5 h-3.5 text-black" />
+                    <span>لینک کپی شد! در Safari باز کنید</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>کپی آدرس سایت جهت باز کردن در Safari</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Alert: Fix for IPA installation & GitHub Actions build */}
           <div className="p-3.5 rounded-2xl bg-amber-950/40 border border-amber-500/40 text-[11px] text-amber-200 leading-relaxed space-y-3 shadow-sm">
             <div className="flex items-start gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <span className="font-extrabold text-white block text-xs">
-                  راهنمای رفع ارورهای GitHub Actions (Exit Code 1 و Lock File):
+                  چرا فایل IPA روی آیفون نصب نمی‌شود یا ارور می‌دهد؟ (علت و راهکار):
                 </span>
                 <p className="text-slate-300 text-[11px]">
-                  <strong>علت ارور Build Web Application (Exit code 1):</strong> نبودن دستور <code className="text-cyan-300">"build": "vite build"</code> در فایل <code className="text-purple-300">package.json</code> یا عدم تطابق نسخه Node.js در سرور اکشنز.
+                  <strong>۱. اگر در آیفون روی فایل IPA تپ می‌کنید و نصب نمی‌شود:</strong> سیستم‌عامل iOS بر خلاف اندروید (APK)، به دلایل امنیتی امکان نصب مستقیم فایل IPA با لمس در Files را نمی‌دهد. برای نصب بدون کامپیوتر، از کادر سبز رنگ بالا (سافاری Add to Home Screen) استفاده نمایید.
                 </p>
                 <p className="text-slate-300 text-[11px]">
-                  <strong>راهکار آنی:</strong> ورک‌فلو <code className="text-cyan-300">deploy-ipa-release.yml</code> بازنویسی شد تا اسکریپت بیلد را به صورت خودکار ترمیم کند. کافیست محتوای ورک‌فلو را جایگزین کنید.
+                  <strong>۲. اگر در Sideloadly یا AltStore ارور «No executable found» گرفتید:</strong> فایل IPA نیازمند باینری کامپایل‌شده Xcode است که توسط GitHub Actions در مک‌او‌اس بیلد می‌شود. با پوش دستورات زیر به گیت‌هاب، فایل IPA واقعی در بخش Releases قرار می‌گیرد.
+                </p>
+                <p className="text-slate-300 text-[11px]">
+                  <strong>۳. رفع ارور Process completed with exit code 1:</strong> ورک‌فلو <code className="text-cyan-300">deploy-ipa-release.yml</code> بازنویسی شد تا اسکریپت بیلد و Xcode را خودکار اصلاح کند.
                 </p>
               </div>
             </div>
@@ -144,6 +228,16 @@ git push origin v1.0.0 --force`;
                 className="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-black text-[11px] flex items-center gap-1.5 transition-all shadow-md shadow-amber-400/20"
               >
                 <span>ویرایش مستقیم ورک‌فلو در گیت‌هاب</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+
+              <a
+                href={releasesUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-[11px] flex items-center gap-1.5 transition-all shadow-md shadow-emerald-500/20"
+              >
+                <span>مشاهده رلیزهای گیت‌هاب</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
 
@@ -163,15 +257,6 @@ git push origin v1.0.0 --force`;
               >
                 <Download className="w-3 h-3 text-emerald-400" />
                 <span>دانلود package.json</span>
-              </a>
-
-              <a
-                href="/package-lock.json"
-                download="package-lock.json"
-                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-200 font-bold text-[11px] flex items-center gap-1.5 transition-all"
-              >
-                <Download className="w-3 h-3 text-cyan-400" />
-                <span>دانلود package-lock.json</span>
               </a>
             </div>
           </div>

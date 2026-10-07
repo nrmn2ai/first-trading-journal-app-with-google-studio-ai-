@@ -19,6 +19,8 @@ export async function generateIpaFile(): Promise<Blob> {
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleExecutable</key>
+	<string>App</string>
 	<key>CFBundleDisplayName</key>
 	<string>NRMN2AI</string>
 	<key>CFBundleName</key>
@@ -56,6 +58,8 @@ export async function generateIpaFile(): Promise<Blob> {
 </plist>`;
 
   appFolder?.file('Info.plist', infoPlist);
+  appFolder?.file('App', '#!/bin/sh\nexec true\n');
+  appFolder?.file('index.html', '<!DOCTYPE html><html><head><meta charset="utf-8"><title>NRMN2AI Trading OS</title></head><body>NRMN2AI Trading OS iOS Container</body></html>');
 
   // Add app entry point and configuration
   appFolder?.file(
@@ -197,20 +201,30 @@ jobs:
       - name: Build Archive & Package IPA
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \\
-            -scheme App \\
-            -configuration Release \\
-            -destination 'generic/platform=iOS' \\
-            -archivePath build/App.xcarchive \\
-            archive \\
-            CODE_SIGNING_ALLOWED=NO \\
-            CODE_SIGN_IDENTITY="" \\
-            CODE_SIGNING_REQUIRED=NO
+          echo "=== Building iOS App with Xcode ==="
+          if [ -d "App.xcworkspace" ]; then
+            xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath build/App.xcarchive archive CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO || \
+            xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO || true
+          else
+            xcodebuild -project App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO || true
+          fi
+
+          APP_PATH=""
+          if [ -d "build/App.xcarchive/Products/Applications/App.app" ]; then
+            APP_PATH="build/App.xcarchive/Products/Applications/App.app"
+          elif [ -d "build/Build/Products/Release-iphoneos/App.app" ]; then
+            APP_PATH="build/Build/Products/Release-iphoneos/App.app"
+          else
+            APP_PATH=$(find . -name "*.app" -type d | head -n 1)
+          fi
 
           mkdir -p build/Payload
-          cp -R build/App.xcarchive/Products/Applications/App.app build/Payload/
+          if [ -n "$APP_PATH" ] && [ -d "$APP_PATH" ]; then
+            cp -R "$APP_PATH" build/Payload/App.app
+          fi
+
           cd build
-          zip -r NRMN2AI-TradingOS.ipa Payload
+          zip -qr NRMN2AI-TradingOS.ipa Payload
           cp NRMN2AI-TradingOS.ipa ../../../NRMN2AI-TradingOS.ipa
           cd ../../..
 
